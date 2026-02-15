@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Business/">
+    <Project Path="Business/BusinessLayer.csproj" />
+  </Folder>
+  <Folder Name="/DataAccess/">
+    <Project Path="DataAccess/DataAccessLayer.csproj" />
+  </Folder>
+  <Project Path="LifeTracker.Api/LifeTracker.Api.csproj" />
+  <Project Path="Models/Models.csproj" />
+</Solution>
