@@ -8,7 +8,7 @@ namespace Models
         Yearly
     }
 
-    public class RecurringTransaction : Transaction, IBusinessModel
+    public class RecurringTransaction : Transaction, IModel
     {
         public Frequency Frequency;
     }

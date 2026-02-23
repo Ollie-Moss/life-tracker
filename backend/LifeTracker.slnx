@@ -7,4 +7,5 @@
   </Folder>
   <Project Path="LifeTracker.Api/LifeTracker.Api.csproj" />
   <Project Path="Models/Models.csproj" />
+  <Project Path="TestProgram/TestProgram.csproj" />
 </Solution>

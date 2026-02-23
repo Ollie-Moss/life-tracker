@@ -6,7 +6,7 @@ namespace Models
         Exact
     }
 
-    public class Transaction : IBusinessModel
+    public class Transaction : IModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = "";

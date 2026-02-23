@@ -1,0 +1,14 @@
+services:
+  database:
+    image: postgres:16.2-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword 
+      POSTGRES_USER: postgres
+      POSTGRES_DB: LifeTracker
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data # Persist data outside the container
+
+volumes:
+  local_pgdata: # Define the volume for data persistence

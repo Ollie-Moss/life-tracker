@@ -1,9 +1,9 @@
 ﻿namespace Models
 {
     /// <summary>
-    /// Represents a business model with an PK Id.
+    /// Represents a model with an PK Id.
     /// </summary>
-    public interface IBusinessModel
+    public interface IModel
     {
         public Guid Id { get; set; }
     }

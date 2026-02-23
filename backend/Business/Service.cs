@@ -1,4 +1,5 @@
-﻿using DataAccessLayer;
+﻿using AutoMapper;
+using DataAccessLayer;
 using DataAccessLayer.Models;
 using Models;
 
@@ -6,15 +7,15 @@ namespace BusinessLayer
 {
     /// <summary>
     /// Describes all basic CRUD operations for a given database object and business model.<br></br>
-    /// Uses <see cref="IUnitOfWork{TDbContext}"/> and <see cref="IPrimaryRepository{TEntity}"/> to interact with the database.
+    /// Uses <see cref="IUnitOfWork{TDbContext}"/> and <see cref="IRepository{TEntity}"/> to interact with the database.
     /// </summary>
     /// <typeparam name="TDatabaseModel">The database model to be mapped between.</typeparam>
     /// <typeparam name="TBusinessModel">The business model to be mapped between.</typeparam>
-    public class Service<TDatabaseModel, TBusinessModel> : ServiceBase, IPrimaryService<TBusinessModel> 
-        where TDatabaseModel : class, IDatabaseModel
-        where TBusinessModel : class, IBusinessModel
+    public class Service<TDatabaseModel, TBusinessModel> : ServiceBase, IService<TBusinessModel>
+        where TDatabaseModel : class, IDataModel
+        where TBusinessModel : class, IModel
     {
-        public Service(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public Service(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
 
         }
@@ -24,7 +25,7 @@ namespace BusinessLayer
 		/// </summary>
 		/// <param name="id">The ID of the model to retrieve.</param>
 		/// <returns>The business model or <c>null</c> if not found.</returns>
-        public virtual TBusinessModel Get(int id)
+        public virtual TBusinessModel Get(Guid id)
         {
             var data = UnitOfWork.GetRepository<TDatabaseModel>().Get(id);
             if (data == null) return null;
@@ -41,7 +42,7 @@ namespace BusinessLayer
 		/// </summary>
 		/// <param name="model">The business model to add.</param>
 		/// <returns>The ID of the newly added entity.</returns>
-        public virtual int Add(TBusinessModel model)
+        public virtual Guid Add(TBusinessModel model)
         {
             Validate(model);
 
@@ -61,7 +62,7 @@ namespace BusinessLayer
 		/// </summary>
 		/// <param name="model">The new values.</param>
 		/// <returns>The ID of the entity.</returns>
-        public virtual int Update(TBusinessModel model)
+        public virtual Guid Update(TBusinessModel model)
         {
             Validate(model);
 
@@ -79,10 +80,24 @@ namespace BusinessLayer
 		/// Deletes an entity from the database by ID.
 		/// </summary>
 		/// <param name="id">The ID of the entity to delete.</param>
-        public virtual void Delete(int id)
+        public virtual void Delete(Guid id)
         {
             UnitOfWork.GetRepository<TDatabaseModel>().Delete(id);
             UnitOfWork.Save();
+        }
+
+        public virtual IList<TBusinessModel> Get(QueryBuilder<TBusinessModel> query)
+        {
+            QueryBuilder<TDatabaseModel> dataQuery = new QueryBuilder<TDatabaseModel>();
+
+            Mapper.Map(query, dataQuery);
+
+            var data = UnitOfWork.GetRepository<TDatabaseModel>().Get(dataQuery);
+            var models = new List<TBusinessModel>();
+
+            Mapper.Map(data, models);
+
+            return models;
         }
 
         /// <summary>
@@ -99,6 +114,7 @@ namespace BusinessLayer
 
             return models;
         }
+
     }
 }
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace DataAccessLayer
+﻿namespace DataAccessLayer
 {
 
     public interface IUnitOfWorkBase

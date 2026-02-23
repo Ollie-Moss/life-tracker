@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
@@ -17,6 +18,7 @@ namespace DataAccessLayer
         /// <param name="context">The context.</param>
         public UnitOfWork(TDbContext context) : base(context)
         {
+
         }
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace DataAccessLayer
         /// </summary>
         /// <typeparam name="TEntity">The database model associated with the repository</typeparam>
         /// <param name="context">The context.</param>
-        public IPrimaryRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IDatabaseModel
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IDataModel
         {
             if (!_repositories.TryGetValue(typeof(TEntity), out var repo))
             {
@@ -34,17 +36,16 @@ namespace DataAccessLayer
         }
 
         /// <summary>
-        /// Returns the repository associated with the database model.
+        /// Maps a given <typeparamref name="TEntity"/> to a <typeparamref name="TRepository"/>.
         /// </summary>
         /// <typeparam name="TEntity">The database model associated with the repository</typeparam>
-        /// <param name="context">The context.</param>
-        public ICompositeRepository<TEntity> GetCompositeRepository<TEntity>() where TEntity : class, IDatabaseModelComposite
+        /// <typeparam name="TRepository">The repository containing the Entity</typeparam>
+        /// <param name="repository">The repository.</param>
+        public void RegisterRepository<TEntity, TRepository>(TRepository repository)
+            where TEntity : class, IDataModel
+            where TRepository : class, IRepository<TEntity>
         {
-            if (!_repositories.TryGetValue(typeof(TEntity), out var repo))
-            {
-                throw new InvalidOperationException($"No repository registered for type {typeof(TEntity).Name}");
-            }
-            return (CompositeRepository<TEntity, TDbContext>)repo;
+            _repositories.Add(typeof(TEntity), repository);
         }
     }
 }

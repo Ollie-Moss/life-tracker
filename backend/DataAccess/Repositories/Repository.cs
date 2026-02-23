@@ -1,23 +1,17 @@
 ﻿using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 
 
-namespace DataAccessLayer
+namespace DataAccessLayer.Repositories
 {
     /// <summary>
     /// Generic repository for basic CRUD operations on entities.
     /// </summary>
     /// <typeparam name="TEntity">The entity type this repository will be responsible for.F</typeparam>
     /// <typeparam name="TDbContext">DBContext for EF to use for DB mapping.</typeparam>
-    public class Repository<TEntity, TDbContext> : IPrimaryRepository<TEntity> 
-        where TEntity : class, IDatabaseModel
+    public class Repository<TEntity, TDbContext> : IRepository<TEntity>
+        where TEntity : class, IDataModel
         where TDbContext : DbContext
     {
 
@@ -57,15 +51,26 @@ namespace DataAccessLayer
         }
 
         /// <summary>
+        /// Gets entities matching the query provided
+        /// </summary>
+        /// <param name="query">The query to run</param>
+        /// <returns></returns>
+        public virtual IList<TEntity> Get(QueryBuilder<TEntity> query)
+        {
+            return query.Run(All).ToList();
+        }
+
+        /// <summary>
         /// Gets an entity
         /// </summary>
         /// <param name="id">The entity ID</param>
         /// <returns></returns>
-        public virtual TEntity Get(int id)
+        public virtual TEntity Get(Guid id)
         {
             return All.FirstOrDefault(a => a.Id == id);
         }
-        public virtual TEntity Delete(int id)
+
+        public virtual TEntity Delete(Guid id)
         {
             return Delete(Get(id));
         }

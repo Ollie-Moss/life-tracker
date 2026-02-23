@@ -1,6 +1,6 @@
 namespace Models
 {
-    class Task : IBusinessModel
+    public class CalendarTask : IModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = "";

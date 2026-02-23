@@ -16,10 +16,10 @@ namespace BusinessLayer
         protected IUnitOfWork UnitOfWork { get; private set; }
         protected IMapper Mapper { get; private set; }
 
-        public ServiceBase(IUnitOfWork unitOfWork)
+        public ServiceBase(IUnitOfWork unitOfWork, IMapper mapper)
         {
             UnitOfWork = unitOfWork;
-            Mapper = MapperFactory.CreateMapper<MappingProfile>();
+            Mapper = mapper;
         }
 
         /// <summary>

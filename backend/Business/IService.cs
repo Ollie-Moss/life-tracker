@@ -1,15 +1,19 @@
 ﻿using Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BusinessLayer
 {
     /// <summary>
-    /// Interface for all service operations decoupled from unique identifier style.<br></br>
+    /// Interface that describes interactions with primary key business models
     /// </summary>
     /// <typeparam name="TModel">The type of business model this service will be responsible for.</typeparam>
-    public interface IService<TModel> where TModel : class
+    public interface IService<TModel> : IServiceBase<TModel> where TModel : class, IModel
     {
-        int Add(TModel model);
-        IList<TModel> List();
-        int Update(TModel model);
+        void Delete(Guid id);
+        TModel Get(Guid id);
     }
 }
